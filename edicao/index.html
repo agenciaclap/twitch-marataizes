@@ -2,1079 +2,1050 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LojaEdit — Editor de Vídeo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Educação Brincando — Proposta Piúma</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#06060d;--s1:#0c0c18;--s2:#111120;--s3:#161628;
-  --brd:#1e1e34;--brd2:#252540;
-  --p:#8b5cf6;--p2:#a78bfa;--p3:#c4b5fd;
-  --pk:#ec4899;--gr:#10b981;--yl:#f59e0b;
-  --tx:#e8e8f8;--mt:#6060a0;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root {
+  --verde: #0a5c3a;
+  --verde-medio: #1a8a57;
+  --verde-claro: #d4edda;
+  --lima: #c8e63d;
+  --branco: #f9f7f2;
+  --preto: #0d0d0d;
+  --cinza: #5a5a52;
+  --cinza-claro: #ebebdf;
+  --display: 'Fraunces', Georgia, serif;
+  --corpo: 'Lato', sans-serif;
 }
-html,body{height:100%;overflow:hidden}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
 
-/* ── TOP BAR ── */
-.bar{display:flex;align-items:center;gap:8px;padding:0 14px;height:46px;background:var(--s1);border-bottom:1px solid var(--brd);flex-shrink:0;z-index:10}
-.logo{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#fff;letter-spacing:-.5px;white-space:nowrap}
-.logo b{color:var(--p2)}
-.pill{background:var(--s3);border:1px solid var(--brd2);color:var(--p3);font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;letter-spacing:.5px}
-.tabs{display:flex;gap:2px;flex:1;justify-content:center}
-.tab{padding:6px 14px;border-radius:6px;border:none;cursor:pointer;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;background:transparent;color:var(--mt);transition:all .15s;letter-spacing:.2px}
-.tab.on{background:var(--s3);color:var(--p2);border:1px solid var(--brd2)}
-.tab:hover:not(.on){color:var(--tx)}
-.acts{display:flex;gap:6px}
-.b{padding:6px 13px;border-radius:7px;border:none;cursor:pointer;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
-.b-o{background:var(--s3);color:#888;border:1px solid var(--brd2)}.b-o:hover{color:#fff}
-.b-g{background:var(--gr);color:#fff}.b-g:hover{opacity:.85}
-.b-p{background:var(--p);color:#fff}.b-p:hover{background:#7c3aed}
+html { scroll-behavior: smooth; }
 
-/* ── VIEWS ── */
-.view{display:none;flex:1;overflow:hidden;min-height:0}
-.view.on{display:flex}
+body {
+  background: var(--branco);
+  color: var(--preto);
+  font-family: var(--corpo);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
 
-/* ════════════════════════════════════════
-   TEMPLATE GALLERY
-════════════════════════════════════════ */
-.gal{flex-direction:column}
-.gal-top{padding:14px 20px 10px;border-bottom:1px solid var(--brd);flex-shrink:0}
-.gal-top h2{font-size:16px;font-weight:700;margin-bottom:2px}
-.gal-top p{font-size:11px;color:var(--mt)}
-.gal-cats{display:flex;gap:5px;padding:9px 20px;border-bottom:1px solid var(--brd);flex-shrink:0;overflow-x:auto}
-.gal-cats::-webkit-scrollbar{display:none}
-.cat{padding:4px 12px;border-radius:12px;border:1px solid var(--brd2);background:var(--s2);color:var(--mt);font-size:10px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
-.cat.on,.cat:hover{background:var(--p);color:#fff;border-color:var(--p)}
-.gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:14px 20px;overflow-y:auto;flex:1}
-.card{background:var(--s1);border:1.5px solid var(--brd);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .2s;position:relative}
-.card:hover{border-color:var(--p);transform:translateY(-2px);box-shadow:0 8px 28px rgba(139,92,246,.18)}
-.card-thumb{width:100%;height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-direction:column;gap:4px}
-.card-info{padding:10px 12px}
-.card-name{font-size:12px;font-weight:700;color:#eee;margin-bottom:2px}
-.card-desc{font-size:10px;color:var(--mt);line-height:1.4;margin-bottom:8px}
-.card-tags{display:flex;gap:4px;flex-wrap:wrap}
-.tag{font-size:8px;padding:2px 7px;border-radius:6px;font-weight:700}
-.tp{background:#1e1030;color:var(--p3)}
-.tg{background:#0d2018;color:#6ee7b7}
-.ty{background:#1a1000;color:#fbbf24}
-.use-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.65);opacity:0;transition:opacity .2s;font-size:13px;font-weight:800;color:#fff;gap:6px}
-.card:hover .use-btn{opacity:1}
+/* ── CAPA ── */
+.capa {
+  min-height: 100vh;
+  background: var(--verde);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 2.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
 
-/* ════════════════════════════════════════
-   EDITOR
-════════════════════════════════════════ */
-.ed{flex-direction:row}
+.capa-bg-shape {
+  position: absolute;
+  bottom: -80px; right: -80px;
+  width: 480px; height: 480px;
+  background: var(--lima);
+  border-radius: 50%;
+  opacity: 0.12;
+}
 
-/* LEFT */
-.left{width:182px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--brd);display:flex;flex-direction:column}
-.sec-title{font-size:9px;font-weight:800;color:var(--mt);text-transform:uppercase;letter-spacing:1px;padding:9px 10px 5px}
-.dropz{margin:6px;border:1.5px dashed var(--brd2);border-radius:8px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .2s;color:#2a2a50;font-size:10px}
-.dropz:hover,.dropz.ov{border-color:var(--p);color:var(--p2);background:#0d0d20}
-.mlist{flex:1;overflow-y:auto;padding:3px 6px}
-.mi{background:var(--s2);border:1px solid var(--brd);border-radius:7px;margin-bottom:4px;overflow:hidden;cursor:pointer;transition:border-color .15s}
-.mi:hover{border-color:var(--p)}
-.mi.used{border-color:var(--gr)}
-.mi-thumb{width:100%;height:50px;background:#111;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;position:relative}
-.mi-thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.mi-name{padding:3px 7px 5px;font-size:9px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.capa-bg-shape2 {
+  position: absolute;
+  top: -60px; left: 40%;
+  width: 260px; height: 260px;
+  background: var(--lima);
+  border-radius: 50%;
+  opacity: 0.07;
+}
 
-/* CENTER */
-.cen{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.capa-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
 
-/* PREVIEW */
-.prev-area{flex:1;display:flex;align-items:center;justify-content:center;background:#03030a;position:relative;overflow:hidden}
-.prev-wrap{position:relative;width:100%;max-width:660px;aspect-ratio:16/9}
-/* THE CANVAS IS THE VIDEO OUTPUT — renders effects in real time */
-#cvs{width:100%;height:100%;display:block;border-radius:4px;background:#000}
-/* hidden video for source */
-#srcVid{display:none}
-.txt-layer{position:absolute;inset:0;pointer-events:none;z-index:3}
-.txt-el{position:absolute;cursor:move;user-select:none;line-height:1.2;padding:2px 7px}
-.txt-el:hover{outline:1px dashed var(--p);outline-offset:2px}
-.no-vid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#1a1a30;font-size:12px;pointer-events:none}
-.no-vid .ico{font-size:44px}
+.logo-tv {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lima);
+  letter-spacing: 0.05em;
+}
 
-/* SLOT BANNER */
-.slot-bar{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--s2);border-top:1px solid var(--brd);flex-shrink:0;overflow:hidden}
-.slot-bar.hide{display:none}
-.slot-lbl{font-size:9px;font-weight:800;color:var(--p2);white-space:nowrap}
-.slots{display:flex;gap:4px;flex:1;overflow-x:auto}
-.slots::-webkit-scrollbar{display:none}
-.slot{display:flex;align-items:center;gap:4px;padding:4px 9px;background:var(--s3);border:1.5px dashed var(--brd2);border-radius:6px;font-size:9px;color:var(--mt);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
-.slot:hover{border-color:var(--p2);color:var(--p2)}
-.slot.ok{border-style:solid;border-color:var(--gr);color:#6ee7b7;background:#061412}
+.logo-tv span {
+  display: block;
+  font-family: var(--corpo);
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgba(200,230,61,0.55);
+  letter-spacing: 0.2em;
+  margin-top: 3px;
+}
 
-/* PLAYBACK */
-.pb{display:flex;align-items:center;gap:10px;padding:7px 12px;background:var(--s1);border-top:1px solid var(--brd);flex-shrink:0}
-.pb-btn{width:33px;height:33px;border-radius:50%;background:var(--p);border:none;cursor:pointer;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
-.pb-btn:hover{background:#7c3aed}
-.pb-time{font-family:'Space Mono',monospace;font-size:10px;color:var(--mt);min-width:80px;flex-shrink:0}
-.pbar{flex:1;height:3px;background:var(--s3);border-radius:2px;cursor:pointer;position:relative}
-.pbar-f{height:100%;background:var(--p);border-radius:2px;pointer-events:none;width:0}
-.pbar-h{width:10px;height:10px;background:#fff;border-radius:50%;position:absolute;top:50%;transform:translate(-50%,-50%);pointer-events:none;left:0;box-shadow:0 0 6px rgba(139,92,246,.7)}
-.vol{display:flex;align-items:center;gap:5px;flex-shrink:0}
-.vol input{width:60px;accent-color:var(--p)}
+.capa-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(200,230,61,0.6);
+  text-align: right;
+  line-height: 1.8;
+}
 
-/* EFFECTS SHELF */
-.fx-shelf{background:var(--s1);border-top:1px solid var(--brd);padding:5px 10px;flex-shrink:0}
-.fx-label{font-size:9px;font-weight:800;color:var(--mt);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
-.fx-row{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px}
-.fx-row::-webkit-scrollbar{height:2px}
-.fx-chip{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:5px 8px;background:var(--s3);border:1px solid var(--brd2);border-radius:8px;transition:all .15s;flex-shrink:0;min-width:56px;user-select:none}
-.fx-chip:hover{border-color:var(--p2);background:#120c28;transform:translateY(-1px)}
-.fx-chip.on{border-color:var(--p);background:#180f38;color:var(--p2)}
-.fx-chip .e{font-size:15px}
-.fx-chip .n{font-size:8px;color:var(--mt);white-space:nowrap}
-.fx-chip .c{font-size:7px;color:#333;margin-top:1px}
+.capa-corpo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 0;
+  position: relative;
+  z-index: 1;
+}
 
-/* TIMELINE */
-.tl{height:106px;flex-shrink:0;background:#040409;border-top:1px solid var(--brd);display:flex;flex-direction:column;padding:3px 0}
-.trk{display:flex;align-items:center;height:32px;padding:0 10px}
-.trk-n{width:52px;flex-shrink:0;font-size:8px;color:#303060;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
-.trk-c{display:flex;gap:2px;flex:1;overflow-x:auto;align-items:center}
-.trk-c::-webkit-scrollbar{height:2px}
-.clip{height:24px;min-width:64px;border-radius:4px;display:flex;align-items:center;padding:0 18px 0 6px;font-size:9px;font-weight:700;cursor:pointer;border:1.5px solid transparent;position:relative;overflow:hidden;white-space:nowrap;flex-shrink:0;transition:border-color .15s}
-.vc{background:#170d2e;border-color:#3b1a8a;color:var(--p3)}.vc:hover,.vc.on{border-color:var(--p2)}
-.vc.slot-c{border-style:dashed;background:#090615;color:#3a2560}
-.vc.slot-c.ok{border-style:solid;border-color:var(--gr);background:#041210;color:#6ee7b7}
-.mc{background:#071a0f;border-color:#064530;color:#6ee7b7}
-.tc{background:#140d00;border-color:#5a3000;color:var(--yl)}
-.cdel{position:absolute;right:3px;top:50%;transform:translateY(-50%);background:none;border:none;color:#333;cursor:pointer;font-size:9px;padding:0;line-height:1}
-.cdel:hover{color:#f87171}
-.add{width:22px;height:22px;border-radius:4px;background:var(--s2);border:1px dashed var(--brd2);color:#2a2a50;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:3px;transition:all .15s;line-height:1}
-.add:hover{border-color:var(--p);color:var(--p2)}
+.capa-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(200,230,61,0.15);
+  border: 1px solid rgba(200,230,61,0.3);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lima);
+  margin-bottom: 2rem;
+  width: fit-content;
+}
 
-/* RIGHT */
-.right{width:182px;flex-shrink:0;background:var(--s1);border-left:1px solid var(--brd);display:flex;flex-direction:column;overflow:hidden}
-.rtabs{display:flex;border-bottom:1px solid var(--brd);flex-shrink:0}
-.rtab{flex:1;padding:7px 1px;font-size:8px;font-weight:800;text-align:center;color:#333;cursor:pointer;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.5px;transition:all .15s}
-.rtab.on{color:var(--p2);border-bottom-color:var(--p)}
-.rp{display:none;overflow-y:auto;flex:1;padding:7px}
-.rp.on{display:block}
-.rl{font-size:8px;color:#303060;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:800;margin-top:6px}
-.rl:first-child{margin-top:0}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px}
-.fb{background:var(--s2);border:1.5px solid transparent;border-radius:6px;cursor:pointer;padding:5px 3px;text-align:center;font-size:8px;color:#555;transition:all .15s}
-.fb:hover{border-color:var(--p);color:var(--p2)}.fb.on{border-color:var(--p);background:#170f35;color:var(--p2)}
-.ft{width:100%;height:26px;border-radius:4px;margin-bottom:3px;font-size:12px;display:flex;align-items:center;justify-content:center}
-.ar{display:flex;align-items:center;gap:4px;margin-bottom:5px}
-.ar label{min-width:40px;font-size:8px;color:#555}
-.ar input[type=range]{flex:1;accent-color:var(--p)}
-.av{min-width:20px;text-align:right;font-size:8px;color:#888}
-.ti{width:100%;background:var(--s2);border:1px solid var(--brd);border-radius:5px;padding:5px 7px;color:#eee;font-size:10px;margin-bottom:5px}
-.ti:focus{outline:none;border-color:var(--p)}
-.cds{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px}
-.cd{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .15s;flex-shrink:0}
-.cd.on{border-color:#fff}
-.sr{display:flex;gap:3px;margin-bottom:5px}
-.sb{flex:1;padding:4px 2px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:#555;font-size:8px;cursor:pointer;text-align:center;transition:all .15s}
-.sb.on,.sb:hover{background:#170f35;border-color:var(--p);color:var(--p2)}
+.capa-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--lima);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
 
-.notif{position:fixed;top:48px;right:14px;background:#120a28;border:1px solid var(--p);border-radius:9px;padding:9px 14px;font-size:11px;color:var(--p2);z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;max-width:240px;line-height:1.4}
-.notif.on{opacity:1}
-::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.capa-titulo {
+  font-family: var(--display);
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 800;
+  color: var(--branco);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.capa-titulo .destaque {
+  color: var(--lima);
+}
+
+.capa-subtitulo {
+  font-size: 1.1rem;
+  color: rgba(249,247,242,0.6);
+  max-width: 520px;
+  margin-top: 1.5rem;
+  font-weight: 300;
+}
+
+.capa-dest {
+  margin-top: 2.5rem;
+  font-size: 0.85rem;
+  color: rgba(249,247,242,0.45);
+}
+
+.capa-dest strong {
+  color: rgba(249,247,242,0.8);
+  font-weight: 500;
+}
+
+.capa-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(200,230,61,0.15);
+  padding-top: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.capa-rodape p {
+  font-size: 0.75rem;
+  color: rgba(249,247,242,0.3);
+}
+
+/* ── MÉTRICAS ABERTURA ── */
+.metricas-faixa {
+  background: var(--lima);
+  padding: 0;
+  overflow: hidden;
+}
+
+.metricas-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  divide-x: 1px solid rgba(0,0,0,0.1);
+}
+
+.metrica-item {
+  padding: 2.5rem 2rem;
+  border-right: 1px solid rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.metrica-item:last-child { border-right: none; }
+
+.metrica-numero {
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  color: var(--verde);
+  line-height: 1;
+  display: block;
+}
+
+.metrica-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(10,92,58,0.65);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+  display: block;
+}
+
+/* ── SEÇÕES ── */
+section {
+  padding: 5rem 3rem;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.secao-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--verde-medio);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.secao-label::before {
+  content: '';
+  width: 20px;
+  height: 2px;
+  background: var(--verde-medio);
+}
+
+.secao-titulo {
+  font-family: var(--display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--preto);
+  margin-bottom: 2rem;
+}
+
+/* ── PROBLEMA ── */
+.problema-bg {
+  background: #111a14;
+  padding: 5rem 0;
+}
+
+.problema-bg section { color: var(--branco); }
+.problema-bg .secao-titulo { color: var(--branco); }
+.problema-bg .secao-label { color: rgba(200,230,61,0.7); }
+.problema-bg .secao-label::before { background: rgba(200,230,61,0.5); }
+
+.stat-destaque {
+  font-family: var(--display);
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 800;
+  color: var(--lima);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.stat-desc {
+  font-size: 1rem;
+  color: rgba(249,247,242,0.55);
+  max-width: 500px;
+  font-weight: 300;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(200,230,61,0.1);
+  border: 1px solid rgba(200,230,61,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 3rem;
+}
+
+.stat-card {
+  background: #111a14;
+  padding: 2rem;
+}
+
+.stat-card .num {
+  font-family: var(--display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--lima);
+  line-height: 1;
+}
+
+.stat-card .txt {
+  font-size: 0.85rem;
+  color: rgba(249,247,242,0.5);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.stat-card .fonte {
+  font-size: 0.7rem;
+  color: rgba(249,247,242,0.25);
+  margin-top: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+/* ── COMO FUNCIONA ── */
+.passos {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.passo {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--cinza-claro);
+  align-items: start;
+}
+
+.passo:last-child { border-bottom: none; }
+
+.passo-num {
+  font-family: var(--display);
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--cinza-claro);
+  line-height: 1;
+}
+
+.passo-titulo {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--preto);
+  margin-bottom: 0.5rem;
+}
+
+.passo-desc {
+  font-size: 0.9rem;
+  color: var(--cinza);
+  line-height: 1.65;
+}
+
+.passo-detalhe {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--verde-medio);
+  font-weight: 500;
+}
+
+/* ── DIFERENCIAIS ── */
+.diff-bg {
+  background: var(--cinza-claro);
+  padding: 5rem 0;
+}
+
+.diff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.diff-card {
+  background: var(--branco);
+  border-radius: 8px;
+  padding: 2rem;
+  border-left: 4px solid var(--verde);
+}
+
+.diff-card h3 {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--preto);
+  margin-bottom: 0.5rem;
+}
+
+.diff-card p {
+  font-size: 0.85rem;
+  color: var(--cinza);
+  line-height: 1.6;
+}
+
+/* ── IMPACTO ── */
+.impacto-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.impacto-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border: 1px solid var(--cinza-claro);
+  border-radius: 8px;
+}
+
+.impacto-num {
+  font-family: var(--display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--verde);
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.impacto-label {
+  font-size: 0.8rem;
+  color: var(--cinza);
+  line-height: 1.5;
+}
+
+/* ── TV ── */
+.tv-bg {
+  background: var(--verde);
+  padding: 5rem 0;
+}
+
+.tv-bg section { color: var(--branco); }
+.tv-bg .secao-titulo { color: var(--branco); }
+.tv-bg .secao-label { color: rgba(200,230,61,0.7); }
+.tv-bg .secao-label::before { background: rgba(200,230,61,0.5); }
+
+.tv-itens {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tv-item {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(200,230,61,0.12);
+  align-items: flex-start;
+}
+
+.tv-item:last-child { border-bottom: none; }
+
+.tv-icone {
+  width: 40px;
+  height: 40px;
+  background: rgba(200,230,61,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: var(--lima);
+  font-weight: 700;
+  font-family: var(--display);
+}
+
+.tv-item strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--branco);
+  margin-bottom: 0.2rem;
+}
+
+.tv-item span {
+  font-size: 0.83rem;
+  color: rgba(249,247,242,0.5);
+}
+
+/* ── INVESTIMENTO ── */
+.inv-box {
+  border: 2px solid var(--verde);
+  border-radius: 8px;
+  padding: 3rem;
+  margin: 2.5rem 0;
+  position: relative;
+}
+
+.inv-label {
+  position: absolute;
+  top: -0.7em;
+  left: 2rem;
+  background: var(--branco);
+  padding: 0 0.75rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--verde);
+  font-weight: 500;
+}
+
+.inv-total {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.inv-valor {
+  font-family: var(--display);
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 800;
+  color: var(--preto);
+  line-height: 1;
+}
+
+.inv-desc {
+  font-size: 0.9rem;
+  color: var(--cinza);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+.inv-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  font-size: 0.88rem;
+}
+
+.inv-tabela tr {
+  border-bottom: 1px solid var(--cinza-claro);
+}
+
+.inv-tabela tr:last-child { border-bottom: none; }
+
+.inv-tabela td {
+  padding: 0.85rem 0;
+  color: var(--cinza);
+}
+
+.inv-tabela td:last-child {
+  text-align: right;
+  font-weight: 500;
+  color: var(--preto);
+  font-family: var(--display);
+}
+
+.custo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--verde-claro);
+  color: var(--verde);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  margin-top: 1.5rem;
+}
+
+/* ── ARGUMENTO ── */
+.arg-bg {
+  background: var(--preto);
+  padding: 5rem 0;
+}
+
+.arg-bg section { color: var(--branco); }
+
+.frase-argumento {
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--lima);
+  border-left: 4px solid var(--lima);
+  padding-left: 2rem;
+  margin: 2.5rem 0;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.arg-itens {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.arg-item {
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.arg-item strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--branco);
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.arg-item span {
+  font-size: 0.8rem;
+  color: rgba(249,247,242,0.45);
+  line-height: 1.5;
+}
+
+/* ── CTA ── */
+.cta-bg {
+  background: var(--lima);
+  padding: 5rem 3rem;
+  text-align: center;
+}
+
+.cta-titulo {
+  font-family: var(--display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--verde);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.cta-texto {
+  font-size: 1rem;
+  color: rgba(10,92,58,0.65);
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+}
+
+.cta-contato {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--verde);
+  text-decoration: none;
+  border-bottom: 2px solid rgba(10,92,58,0.3);
+  padding-bottom: 3px;
+}
+
+/* ── RODAPÉ ── */
+footer {
+  background: #0a0f0b;
+  padding: 2.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer p {
+  font-size: 0.75rem;
+  color: rgba(249,247,242,0.25);
+}
+
+footer .logo-rod {
+  font-family: var(--display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--lima);
+  opacity: 0.5;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .capa, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .metricas-inner { grid-template-columns: 1fr 1fr; }
+  .stats-row, .diff-grid, .impacto-grid, .arg-itens { grid-template-columns: 1fr; }
+  .passo { grid-template-columns: 60px 1fr; }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+  .cta-bg { padding: 4rem 1.5rem; }
+}
 </style>
 </head>
 <body>
 
-<!-- BAR -->
-<div class="bar">
-  <div class="logo">✦ <b>LOJA</b>EDIT <span class="pill">PRO</span></div>
-  <div class="tabs">
-    <button class="tab on" onclick="goView('vGal',this)">🎬 Templates</button>
-    <button class="tab" onclick="goView('vEd',this)">✂ Editor</button>
-  </div>
-  <div class="acts">
-    <span id="tmplTag" style="display:none;font-size:10px;color:var(--p2);font-weight:700;padding:0 6px"></span>
-    <button class="b b-o" onclick="alert('Salvo!')">💾</button>
-    <button class="b b-g" onclick="doExport()">⬇ Exportar</button>
-  </div>
-</div>
+<!-- CAPA -->
+<div class="capa">
+  <div class="capa-bg-shape"></div>
+  <div class="capa-bg-shape2"></div>
 
-<!-- ═══════════ GALLERY VIEW ═══════════ -->
-<div class="view gal on" id="vGal">
-  <div class="gal-top">
-    <h2>Templates para sua loja</h2>
-    <p>Escolha um template → importe seus vídeos → pronto para exportar</p>
-  </div>
-  <div class="gal-cats" id="galCats"></div>
-  <div class="gal-grid" id="galGrid"></div>
-</div>
-
-<!-- ═══════════ EDITOR VIEW ═══════════ -->
-<div class="view ed" id="vEd">
-
-  <!-- LEFT: MEDIA -->
-  <div class="left">
-    <div class="sec-title">📁 Mídias</div>
-    <div class="dropz" id="dz" ondragover="dzOn(event)" ondragleave="dzOff()" ondrop="dzDrop(event)" onclick="document.getElementById('fin').click()">
-      <input type="file" id="fin" accept="video/*,audio/*" multiple onchange="handleFiles(this.files)">
-      <div style="font-size:22px;margin-bottom:4px">🎬</div>
-      Arraste vídeos aqui<br>
-      <span style="color:#1a1a3a;font-size:9px">ou clique</span>
+  <div class="capa-topo">
+    <div class="logo-tv">
+      TV Marataízes
+      <span>Canal 300 · Soul TV</span>
     </div>
-    <div class="mlist" id="mlist"></div>
+    <div class="capa-badge">
+      Proposta Técnica e Financeira<br>
+      Piúma · ES · Junho 2026
+    </div>
   </div>
 
-  <!-- CENTER -->
-  <div class="cen">
+  <div class="capa-corpo">
+    <div class="capa-tag">Piloto Municipal · 5 Escolas</div>
+    <h1 class="capa-titulo">
+      Educação<br>
+      <span class="destaque">Brincando</span><br>
+      em Piúma.
+    </h1>
+    <p class="capa-subtitulo">
+      Hub de tecnologia com gamificação ao vivo nas escolas públicas municipais.
+      Matemática, Geografia e Ciências — com toda a turma engajada.
+    </p>
+    <p class="capa-dest">
+      Apresentado à <strong>Secretaria Municipal de Educação de Piúma</strong><br>
+      Via indicação do Presidente da Câmara Municipal
+    </p>
+  </div>
 
-    <!-- PREVIEW — canvas renders video + effects in real time -->
-    <div class="prev-area">
-      <div class="prev-wrap" id="pw">
-        <canvas id="cvs"></canvas>
-        <video id="srcVid" crossorigin="anonymous" playsinline></video>
-        <div class="txt-layer" id="txtLayer"></div>
-        <div class="no-vid" id="noVid">
-          <div class="ico">🎬</div>
-          <div>Escolha um template ou adicione vídeos</div>
+  <div class="capa-rodape">
+    <p>TV Marataízes · (28) 99903-6141 · tvmarataizes.digital</p>
+    <p>Macuca Produções · CNPJ 59.245.417/0001-67</p>
+  </div>
+</div>
+
+<!-- MÉTRICAS -->
+<div class="metricas-faixa">
+  <div class="metricas-inner">
+    <div class="metrica-item">
+      <span class="metrica-numero">5</span>
+      <span class="metrica-label">Escolas no piloto</span>
+    </div>
+    <div class="metrica-item">
+      <span class="metrica-numero">1.200</span>
+      <span class="metrica-label">Alunos impactados</span>
+    </div>
+    <div class="metrica-item">
+      <span class="metrica-numero">R$13</span>
+      <span class="metrica-label">Custo por aluno</span>
+    </div>
+    <div class="metrica-item">
+      <span class="metrica-numero">15min</span>
+      <span class="metrica-label">Para montar e começar</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<div class="problema-bg">
+  <section>
+    <p class="secao-label">01 · O problema</p>
+    <h2 class="secao-titulo">O Espírito Santo é referência nacional em educação.<br>Piúma ainda pode ir mais longe.</h2>
+
+    <div class="stat-destaque">52%</div>
+    <p class="stat-desc">
+      dos alunos do 5º ano do ensino fundamental brasileiro não dominam matemática básica. A escola pública precisa de uma resposta diferente — não mais do mesmo.
+    </p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num">68%</div>
+        <div class="txt">dos professores relatam queda crítica de atenção nos primeiros 10 minutos de aula tradicional.</div>
+        <div class="fonte">Fonte: CNE</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">3×</div>
+        <div class="txt">mais retenção de conteúdo em aulas com elementos de gamificação ao vivo, comparado à aula expositiva.</div>
+        <div class="fonte">Fonte: Universidade de Columbia</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">25%</div>
+        <div class="txt">da receita municipal já está constitucionalmente reservada para educação. O investimento não precisa ser criado — precisa ser bem usado.</div>
+        <div class="fonte">Constituição Federal · Art. 212</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">1º</div>
+        <div class="txt">O município que implementar este programa será o primeiro do ES em gamificação educacional ao vivo nas escolas públicas.</div>
+        <div class="fonte">TV Marataízes · 2026</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- COMO FUNCIONA -->
+<section>
+  <p class="secao-label">02 · Como funciona</p>
+  <h2 class="secao-titulo">De zero a jogo<br>em 15 minutos.</h2>
+
+  <div class="passos">
+    <div class="passo">
+      <div class="passo-num">01</div>
+      <div>
+        <h3 class="passo-titulo">A TV Marataízes chega com tudo</h3>
+        <p class="passo-desc">Nossa equipe leva a TV touch, os equipamentos e o suporte técnico completo. A escola não precisa ter nenhuma estrutura própria. Montagem em 15 minutos — sem obra, sem instalação, sem treinamento técnico para o professor.</p>
+        <span class="passo-detalhe">→ Zero sobrecarga para a escola</span>
+      </div>
+    </div>
+
+    <div class="passo">
+      <div class="passo-num">02</div>
+      <div>
+        <h3 class="passo-titulo">A turma divide-se em dois times</h3>
+        <p class="passo-desc">Cabo de Guerra digital: dois times respondem questões curriculares em tempo real na tela touch. Cada acerto move a corda. A sala toda torce, grita e aprende. Configuração flexível: 10, 20 ou 30 segundos por rodada — adaptado à faixa etária.</p>
+        <span class="passo-detalhe">→ Até 8 turmas por escola em um dia</span>
+        <div style="margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <a href="https://tvmarataizes.digital/educacao/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:var(--verde-claro); color:var(--verde); font-size:0.78rem; font-weight:700; padding:0.4rem 1rem; border-radius:100px; text-decoration:none; letter-spacing:0.05em;">▶ Ver o programa</a>
+          <a href="https://tvmarataizes.digital/tvmarataizesnasescolas/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:var(--cinza-claro); color:var(--cinza); font-size:0.78rem; font-weight:700; padding:0.4rem 1rem; border-radius:100px; text-decoration:none; letter-spacing:0.05em;">▶ Ver o jogo nas escolas</a>
         </div>
       </div>
     </div>
 
-    <!-- SLOT BANNER -->
-    <div class="slot-bar hide" id="slotBar">
-      <div class="slot-lbl">📌 SLOTS</div>
-      <div class="slots" id="slotList"></div>
-      <button class="b b-p" style="font-size:9px;flex-shrink:0" onclick="autoFill()">✦ Auto</button>
+    <div class="passo">
+      <div class="passo-num">03</div>
+      <div>
+        <h3 class="passo-titulo">O professor recebe o relatório</h3>
+        <p class="passo-desc">Desempenho por aluno e por turma. O professor sabe exatamente o que reforçar na semana seguinte — sem precisar preparar avaliação extra. A plataforma faz o diagnóstico enquanto o jogo acontece.</p>
+        <span class="passo-detalhe">→ Aprendizado com dados</span>
+      </div>
     </div>
 
-    <!-- PLAYBACK -->
-    <div class="pb">
-      <button class="pb-btn" id="pbBtn" onclick="togglePlay()">▶</button>
-      <div class="pb-time" id="pbTime">0:00 / 0:00</div>
-      <div class="pbar" id="pbar" onclick="seek(event)">
-        <div class="pbar-f" id="pbarF"></div>
-        <div class="pbar-h" id="pbarH"></div>
-      </div>
-      <div class="vol">🔊<input type="range" min="0" max="1" step=".05" value="1" oninput="setVol(this.value)"></div>
-    </div>
-
-    <!-- FX SHELF -->
-    <div class="fx-shelf">
-      <div class="fx-label">⚡ Efeitos — clique para aplicar ao clipe atual</div>
-      <div class="fx-row" id="fxRow"></div>
-    </div>
-
-    <!-- TIMELINE -->
-    <div class="tl">
-      <div class="trk">
-        <div class="trk-n">🎬 Vídeo</div>
-        <div class="trk-c" id="vTrk"></div>
-        <button class="add" onclick="document.getElementById('fin').click()">+</button>
-      </div>
-      <div class="trk">
-        <div class="trk-n">🎵 Áudio</div>
-        <div class="trk-c" id="mTrk"></div>
-        <button class="add" onclick="pickAudio()">+</button>
-      </div>
-      <div class="trk">
-        <div class="trk-n">✍ Texto</div>
-        <div class="trk-c" id="tTrk"></div>
-        <button class="add" onclick="addText()">+</button>
+    <div class="passo">
+      <div class="passo-num">04</div>
+      <div>
+        <h3 class="passo-titulo">A escola aparece na TV Marataízes</h3>
+        <p class="passo-desc">Todas as atividades realizadas nas escolas são registradas e exibidas em programa especial na TV Marataízes — Canal 300 Soul TV. Alunos, professores e a educação pública de Piúma com visibilidade na mídia regional.</p>
+        <span class="passo-detalhe">→ A prefeitura ganha comunicação do investimento</span>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- RIGHT PANEL -->
-  <div class="right">
-    <div class="rtabs">
-      <div class="rtab on" onclick="rTab(this,'rFilt')">Filtros</div>
-      <div class="rtab" onclick="rTab(this,'rAdj')">Ajustes</div>
-      <div class="rtab" onclick="rTab(this,'rTxt')">Texto</div>
-    </div>
+<!-- DIFERENCIAIS -->
+<div class="diff-bg">
+  <section>
+    <p class="secao-label">03 · Diferenciais</p>
+    <h2 class="secao-titulo">Por que este programa<br>é diferente.</h2>
 
-    <div class="rp on" id="rFilt">
-      <div class="rl">Filtro de cor</div>
-      <div class="fg" id="filtGrid"></div>
-    </div>
-
-    <div class="rp" id="rAdj">
-      <div class="rl">Imagem</div>
-      <div class="ar"><label>Brilho</label><input type="range" min="0" max="200" value="100" id="aBr" oninput="adjUpd()"><span class="av" id="vBr">100</span></div>
-      <div class="ar"><label>Contraste</label><input type="range" min="0" max="200" value="100" id="aCo" oninput="adjUpd()"><span class="av" id="vCo">100</span></div>
-      <div class="ar"><label>Saturação</label><input type="range" min="0" max="200" value="100" id="aSa" oninput="adjUpd()"><span class="av" id="vSa">100</span></div>
-      <div class="ar"><label>Tom (Hue)</label><input type="range" min="-180" max="180" value="0" id="aHu" oninput="adjUpd()"><span class="av" id="vHu">0</span></div>
-      <div class="ar"><label>Calor</label><input type="range" min="-50" max="50" value="0" id="aWa" oninput="adjUpd()"><span class="av" id="vWa">0</span></div>
-      <div class="ar"><label>Vinheta</label><input type="range" min="0" max="100" value="0" id="aVi" oninput="adjUpd()"><span class="av" id="vVi">0</span></div>
-      <button class="b b-o" style="width:100%;font-size:9px;margin-top:5px" onclick="resetAdj()">↺ Resetar</button>
-    </div>
-
-    <div class="rp" id="rTxt">
-      <div class="rl">Conteúdo</div>
-      <input class="ti" id="tInp" value="✨ Nova Coleção">
-      <div class="rl">Cor</div>
-      <div class="cds">
-        <div class="cd on" style="background:#fff" onclick="pickCol(this,'#fff')"></div>
-        <div class="cd" style="background:#f59e0b" onclick="pickCol(this,'#f59e0b')"></div>
-        <div class="cd" style="background:#ec4899" onclick="pickCol(this,'#ec4899')"></div>
-        <div class="cd" style="background:#8b5cf6" onclick="pickCol(this,'#8b5cf6')"></div>
-        <div class="cd" style="background:#10b981" onclick="pickCol(this,'#10b981')"></div>
-        <div class="cd" style="background:#3b82f6" onclick="pickCol(this,'#3b82f6')"></div>
-        <div class="cd" style="background:#ef4444" onclick="pickCol(this,'#ef4444')"></div>
-        <div class="cd" style="background:#000;border-color:#555" onclick="pickCol(this,'#000')"></div>
+    <div class="diff-grid">
+      <div class="diff-card">
+        <h3>Sem obra. Sem equipamento fixo.</h3>
+        <p>A TV Marataízes leva tudo e busca tudo. A escola continua exatamente como está. Nenhum investimento em infraestrutura necessário além do programa.</p>
       </div>
-      <div class="rl">Tamanho</div>
-      <div class="sr">
-        <div class="sb" onclick="pickSz(this,'14px')">S</div>
-        <div class="sb on" onclick="pickSz(this,'24px')">M</div>
-        <div class="sb" onclick="pickSz(this,'36px')">L</div>
-        <div class="sb" onclick="pickSz(this,'52px')">XL</div>
+      <div class="diff-card">
+        <h3>Professores no centro, não à margem.</h3>
+        <p>O programa não substitui o professor — ele amplifica. O jogo é a ferramenta; o professor continua sendo o condutor da aula. A tecnologia entra a serviço da pedagogy.</p>
       </div>
-      <div class="rl">Estilo</div>
-      <div class="sr" style="margin-bottom:8px">
-        <div class="sb on" id="stN" onclick="pickSt(this,'400','normal')">Normal</div>
-        <div class="sb" id="stB" onclick="pickSt(this,'700','normal')">Bold</div>
-        <div class="sb" id="stI" onclick="pickSt(this,'400','italic')">Itálico</div>
+      <div class="diff-card">
+        <h3>Conteúdo alinhado à BNCC.</h3>
+        <p>Matemática, Geografia e Ciências com banco de perguntas calibrado por série e faixa etária. Português em desenvolvimento. Cada questão revisada por especialistas.</p>
       </div>
-      <button class="b b-p" style="width:100%;font-size:10px" onclick="addText()">+ Adicionar</button>
+      <div class="diff-card">
+        <h3>Resultado na TV — toda semana.</h3>
+        <p>Único no ES. A escola aparece. O secretário aparece. A prefeitura aparece. Não como publicidade — como resultado concreto e visível para toda a cidade.</p>
+      </div>
+      <div class="diff-card">
+        <h3>Custo por aluno menor que R$ 13.</h3>
+        <p>Menos que o valor de uma apostila. Com entrega completa: equipamento, equipe, conteúdo, registro em vídeo e relatório de desempenho por turma.</p>
+      </div>
+      <div class="diff-card">
+        <h3>Piloto de baixo risco.</h3>
+        <p>5 escolas. Um valor pontual. Resultado mensurável em poucas semanas. A expansão para toda a rede se justifica com dados — não com promessa.</p>
+      </div>
     </div>
+  </section>
+</div>
+
+<!-- IMPACTO -->
+<section>
+  <p class="secao-label">04 · Impacto do piloto</p>
+  <h2 class="secao-titulo">O que o piloto<br>entrega.</h2>
+
+  <div class="impacto-grid">
+    <div class="impacto-card">
+      <span class="impacto-num">5</span>
+      <span class="impacto-label">Escolas municipais atendidas no piloto</span>
+    </div>
+    <div class="impacto-card">
+      <span class="impacto-num">8</span>
+      <span class="impacto-label">Turmas por escola — manhã e tarde</span>
+    </div>
+    <div class="impacto-card">
+      <span class="impacto-num">~240</span>
+      <span class="impacto-label">Alunos impactados por escola</span>
+    </div>
+    <div class="impacto-card">
+      <span class="impacto-num">1.200</span>
+      <span class="impacto-label">Total de alunos no piloto</span>
+    </div>
+    <div class="impacto-card">
+      <span class="impacto-num">3</span>
+      <span class="impacto-label">Disciplinas: Matemática, Geografia e Ciências</span>
+    </div>
+    <div class="impacto-card">
+      <span class="impacto-num">TV</span>
+      <span class="impacto-label">Cobertura no Canal 300 Soul TV inclusa</span>
+    </div>
+  </div>
+</section>
+
+<!-- TV -->
+<div class="tv-bg">
+  <section>
+    <p class="secao-label">05 · A TV que faz diferença</p>
+    <h2 class="secao-titulo">A educação pública<br>de Piúma na TV.</h2>
+
+    <div class="tv-itens">
+      <div class="tv-item">
+        <div class="tv-icone">📺</div>
+        <div>
+          <strong>Canal 300 · Soul TV — ao lado da CNN Brasil</strong>
+          <span>Transmissão para todo o Sul do ES, Brasil e +197 países via streaming. A escola de Piúma com alcance nacional.</span>
+        </div>
+      </div>
+      <div class="tv-item">
+        <div class="tv-icone">🎬</div>
+        <div>
+          <strong>Programa especial dedicado ao projeto</strong>
+          <span>Reportagens de cada escola visitada, com depoimentos de alunos e professores. Conteúdo disponível nas redes sociais e no portal da Prefeitura.</span>
+        </div>
+      </div>
+      <div class="tv-item">
+        <div class="tv-icone">📱</div>
+        <div>
+          <strong>VOD gratuito para pais e alunos</strong>
+          <span>Todos os episódios disponíveis em tvmarataizes.digital. Funciona como uma videoteca educativa gratuita — pais assistem quando quiserem.</span>
+          <div style="margin-top:0.75rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <a href="https://tvmarataizes.digital/educacao/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:rgba(200,230,61,0.15); color:var(--lima); font-size:0.75rem; font-weight:700; padding:0.35rem 0.9rem; border-radius:100px; text-decoration:none; border:1px solid rgba(200,230,61,0.3);">▶ Educação Brincando</a>
+            <a href="https://tvmarataizes.digital/tvmarataizesnasescolas/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:rgba(200,230,61,0.15); color:var(--lima); font-size:0.75rem; font-weight:700; padding:0.35rem 0.9rem; border-radius:100px; text-decoration:none; border:1px solid rgba(200,230,61,0.3);">▶ Cabo de Guerra nas Escolas</a>
+          </div>
+        </div>
+      </div>
+      <div class="tv-item">
+        <div class="tv-icone">🏆</div>
+        <div>
+          <strong>A prefeitura que lidera em inovação educacional</strong>
+          <span>Municípios pioneiros viram referência para a Undime e o MEC. O secretário é convidado para eventos estaduais. O resultado gera reconhecimento institucional real.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- INVESTIMENTO -->
+<section>
+  <p class="secao-label">06 · Investimento</p>
+  <h2 class="secao-titulo">Um piloto que cabe<br>no Fundo de Educação.</h2>
+
+  <div class="inv-box">
+    <span class="inv-label">INVESTIMENTO TOTAL DO PILOTO</span>
+    <div class="inv-total">
+      <div class="inv-valor">R$ 22.500</div>
+      <p class="inv-desc">5 escolas · 2 turnos por escola · equipe, equipamento e cobertura de TV inclusos</p>
+    </div>
+
+    <table class="inv-tabela">
+      <tr>
+        <td>Hub de Tecnologia — por escola (2 turnos completos)</td>
+        <td>R$ 4.500,00</td>
+      </tr>
+      <tr>
+        <td>Número de escolas no piloto</td>
+        <td>5 escolas</td>
+      </tr>
+      <tr>
+        <td>Cobertura de TV e produção audiovisual</td>
+        <td>incluso</td>
+      </tr>
+      <tr>
+        <td>Relatório de desempenho por turma</td>
+        <td>incluso</td>
+      </tr>
+      <tr>
+        <td>Equipamento, equipe e logística</td>
+        <td>incluso</td>
+      </tr>
+    </table>
+
+    <div class="custo-tag">
+      ✓ Menos de R$ 13,00 por aluno impactado
+    </div>
+  </div>
+
+  <p style="font-size:0.82rem; color:var(--cinza); margin-top:1rem;">
+    Dotação sugerida: Fundo Municipal de Educação — despesas com manutenção e desenvolvimento do ensino fundamental. Empenho único, sem vínculo mensal. Após o piloto, expansão negociada com base nos resultados documentados.
+  </p>
+</section>
+
+<!-- ARGUMENTO -->
+<div class="arg-bg">
+  <section>
+    <p class="secao-label" style="color:rgba(200,230,61,0.6)">07 · Por que agora</p>
+    <h2 class="secao-titulo" style="color:var(--branco)">O município que<br>agir primeiro<br>será lembrado por isso.</h2>
+
+    <div class="frase-argumento">
+      "O dinheiro para educação já existe. O que falta é uma forma de gastá-lo que apareça — e que funcione."
+    </div>
+
+    <div class="arg-itens">
+      <div class="arg-item">
+        <strong>Sem licitação complexa</strong>
+        <span>Valor abaixo do teto de dispensa de licitação. Contratação via nota fiscal da Macuca Produções com dotação no Fundo de Educação.</span>
+      </div>
+      <div class="arg-item">
+        <strong>IDEB como argumento político</strong>
+        <span>O ES é top 5 nacional em educação. Piúma pode liderar o Sul Capixaba. O dado do IDEB local vira justificativa técnica para o programa.</span>
+      </div>
+      <div class="arg-item">
+        <strong>Resultado antes das eleições</strong>
+        <span>IDEB sobe em 12 a 18 meses de programa contínuo. O piloto começa agora e os dados aparecem no ciclo eleitoral de 2026.</span>
+      </div>
+      <div class="arg-item">
+        <strong>A escola que lidera vira notícia</strong>
+        <span>"Escola de Piúma usa jogo ao vivo para ensinar matemática" — esse título existe. Falta o município que o protagoniza.</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CTA -->
+<div class="cta-bg">
+  <h2 class="cta-titulo">Próximo passo:<br>uma visita às escolas.</h2>
+  <p class="cta-texto">
+    A estrutura está pronta. O programa está funcionando. Estamos disponíveis para apresentação presencial, demonstração ao vivo e definição do calendário de início.
+  </p>
+  <a class="cta-contato" href="https://wa.me/5528999036141">
+    (28) 99903-6141 · WhatsApp direto
+  </a>
+  <div style="margin-top:2rem; display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+    <a href="https://tvmarataizes.digital/educacao/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:rgba(10,92,58,0.12); color:var(--verde); font-size:0.8rem; font-weight:700; padding:0.5rem 1.2rem; border-radius:100px; text-decoration:none; border:1px solid rgba(10,92,58,0.2);">▶ Ver site do programa</a>
+    <a href="https://tvmarataizes.digital/tvmarataizesnasescolas/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:rgba(10,92,58,0.12); color:var(--verde); font-size:0.8rem; font-weight:700; padding:0.5rem 1.2rem; border-radius:100px; text-decoration:none; border:1px solid rgba(10,92,58,0.2);">▶ Ver o jogo ao vivo</a>
   </div>
 </div>
 
-<div class="notif" id="notif"></div>
-<audio id="bgAud" loop></audio>
+<!-- RODAPÉ -->
+<footer>
+  <p>TV Marataízes · Macuca Produções · CNPJ 59.245.417/0001-67<br>
+  Marataízes · tvmarataizes.digital · (28) 99903-6141</p>
+  <p class="logo-rod">TV Marataízes</p>
+</footer>
 
-<script>
-// ══════════════════════════════════════════════════════════
-//  TEMPLATES
-// ══════════════════════════════════════════════════════════
-const TMPLS = [
-  {id:'fashion',name:'Fashion Drop',cat:'Moda',emoji:'👗',
-   desc:'Cortes rápidos, flash entre cenas, energia máxima.',
-   tags:['3 clipes','15-30s','Flash+Glitch'],color:'#1a0a2e',acc:'#c084fc',
-   filter:'saturate',filterVal:170,
-   fxSeq:['flash','glitch','zoom'],
-   texts:[
-     {t:'✨ NOVA COLEÇÃO',x:50,y:82,sz:32,w:'900',c:'#fff',sh:'0 0 20px rgba(192,132,252,.9)'},
-     {t:'🔥 CHEGA AGORA',x:50,y:12,sz:24,w:'800',c:'#f59e0b',sh:'0 2px 12px #000'},
-   ],slots:3,slotLabels:['Cena 1','Cena 2','Cena 3']},
-
-  {id:'promo',name:'Promoção Relâmpago',cat:'Promoção',emoji:'⚡',
-   desc:'Urgência máxima. Zoom punch e flash vermelho.',
-   tags:['2 clipes','10-20s','Zoom+Flash'],color:'#1a0505',acc:'#ef4444',
-   filter:'saturate',filterVal:180,
-   fxSeq:['flash','zoom'],
-   texts:[
-     {t:'🔥 ATÉ 70% OFF',x:50,y:80,sz:44,w:'900',c:'#fff',sh:'0 0 30px rgba(239,68,68,.9)'},
-     {t:'⏰ HOJE SOMENTE!',x:50,y:14,sz:18,w:'700',c:'#fbbf24',sh:'0 2px 8px #000'},
-   ],slots:2,slotLabels:['Produto','Chamada']},
-
-  {id:'elegant',name:'Lançamento Elegante',cat:'Moda',emoji:'💎',
-   desc:'Fade suave, cores douradas, premium.',
-   tags:['4 clipes','20-40s','Fade+Blur'],color:'#0d0a00',acc:'#f59e0b',
-   filter:'sepia',filterVal:30,
-   fxSeq:['fade','blur','fade'],
-   texts:[
-     {t:'Elegância em cada detalhe',x:50,y:82,sz:20,w:'400',c:'#f59e0b',sh:'0 2px 14px #000'},
-     {t:'Coleção Exclusiva',x:50,y:12,sz:14,w:'300',c:'rgba(245,158,11,.7)',sh:'0 1px 8px #000'},
-   ],slots:4,slotLabels:['Abertura','Produto','Detalhe','Encerramento']},
-
-  {id:'viral',name:'Viral Reels',cat:'Social',emoji:'🚀',
-   desc:'Glitch, spin, bounce. Para TikTok e Reels.',
-   tags:['5 clipes','15-30s','Glitch+Spin'],color:'#0a0520',acc:'#ec4899',
-   filter:'saturate',filterVal:200,
-   fxSeq:['glitch','spin','zoom','bounce'],
-   texts:[
-     {t:'👀 OLHA ISSO!',x:50,y:10,sz:38,w:'900',c:'#ec4899',sh:'0 0 30px rgba(236,72,153,.8)'},
-     {t:'VOCÊ PRECISA VER 🔥',x:50,y:83,sz:24,w:'800',c:'#fff',sh:'0 2px 12px #000'},
-   ],slots:5,slotLabels:['Hook','Cena 2','Cena 3','Cena 4','CTA']},
-
-  {id:'minimal',name:'Minimalista',cat:'Lifestyle',emoji:'🤍',
-   desc:'P&B, fade suave, marcas premium.',
-   tags:['3 clipes','25-45s','Fade'],color:'#0a0a0a',acc:'#e5e7eb',
-   filter:'grayscale',filterVal:60,
-   fxSeq:['fade','fade'],
-   texts:[
-     {t:'Simples. Elegante.',x:50,y:82,sz:22,w:'300',c:'#e5e7eb',sh:'0 2px 10px #000'},
-   ],slots:3,slotLabels:['Abertura','Detalhe','Encerramento']},
-
-  {id:'stories',name:'Stories Rápido',cat:'Social',emoji:'📱',
-   desc:'Flash entre cada clipe. Para Stories.',
-   tags:['6 clipes','10-15s','Flash'],color:'#0d1a10',acc:'#10b981',
-   filter:'saturate',filterVal:130,
-   fxSeq:['flash'],
-   texts:[
-     {t:'🛍 NA LOJA AGORA',x:50,y:82,sz:26,w:'900',c:'#10b981',sh:'0 0 20px rgba(16,185,129,.7)'},
-   ],slots:6,slotLabels:['Story 1','Story 2','Story 3','Story 4','Story 5','Story 6']},
-
-  {id:'event',name:'Inauguração',cat:'Evento',emoji:'🎉',
-   desc:'Animado, colorido, celebratório.',
-   tags:['4 clipes','20-30s','Bounce+Flash'],color:'#0a0520',acc:'#fbbf24',
-   filter:'saturate',filterVal:160,
-   fxSeq:['bounce','flash','zoom'],
-   texts:[
-     {t:'🎉 GRANDE ABERTURA!',x:50,y:10,sz:30,w:'900',c:'#fbbf24',sh:'0 0 25px rgba(251,191,36,.7)'},
-     {t:'Venha nos visitar ✨',x:50,y:83,sz:20,w:'700',c:'#fff',sh:'0 2px 10px #000'},
-   ],slots:4,slotLabels:['Abertura','Ambiente','Produtos','Convite']},
-
-  {id:'product',name:'Produto Showcase',cat:'Produto',emoji:'📦',
-   desc:'Apresentação limpa. Wipe suave, catálogo.',
-   tags:['3 clipes','20-35s','Wipe+Fade'],color:'#050d15',acc:'#3b82f6',
-   filter:'brightness',filterVal:110,
-   fxSeq:['wipe','fade'],
-   texts:[
-     {t:'Qualidade incomparável',x:50,y:83,sz:20,w:'700',c:'#fff',sh:'0 2px 10px #000'},
-   ],slots:3,slotLabels:['Visão geral','Detalhes','CTA']},
-];
-
-const CATS = ['Todos','Moda','Promoção','Produto','Social','Lifestyle','Evento'];
-
-// ══════════════════════════════════════════════════════════
-//  FX DEFINITIONS  (applied on canvas frame-by-frame)
-// ══════════════════════════════════════════════════════════
-const FX_LIST = [
-  {id:'none',    n:'Original', e:'📷', cat:''},
-  {id:'flash',   n:'Flash',    e:'⚡', cat:'Trans'},
-  {id:'glitch',  n:'Glitch',   e:'📺', cat:'Trans'},
-  {id:'zoom',    n:'Zoom Punch',e:'🔍',cat:'Trans'},
-  {id:'fade',    n:'Fade',     e:'🌫', cat:'Trans'},
-  {id:'wipe',    n:'Wipe',     e:'➡', cat:'Trans'},
-  {id:'blur',    n:'Blur In',  e:'💫', cat:'Trans'},
-  {id:'spin',    n:'Spin',     e:'🌀', cat:'Trans'},
-  {id:'bounce',  n:'Bounce',   e:'⬆', cat:'Trans'},
-  {id:'vhs',     n:'VHS',      e:'📼', cat:'Cor'},
-  {id:'neon',    n:'Neon',     e:'🔮', cat:'Cor'},
-  {id:'warm',    n:'Quente',   e:'🔥', cat:'Cor'},
-  {id:'cold',    n:'Frio',     e:'🧊', cat:'Cor'},
-  {id:'bw',      n:'P&B',      e:'⬜', cat:'Cor'},
-  {id:'golden',  n:'Golden',   e:'✨', cat:'Cor'},
-  {id:'cinema',  n:'Cinema',   e:'🎬', cat:'Cor'},
-  {id:'shake',   n:'Shake',    e:'📳', cat:'Movi'},
-  {id:'rgb',     n:'RGB Split',e:'🎨', cat:'Movi'},
-];
-
-// ══════════════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════════════
-const S = {
-  media:[],vClips:[],mClips:[],tClips:[],
-  activeIdx:-1,
-  activeTmpl:null,slots:[],
-  clipFx:{}, // idx->fxId
-  colorFilter:{type:'none',val:100},
-  adj:{br:100,co:100,sa:100,hu:0,wa:0,vi:0},
-  tCol:'#fff',tSz:'24px',tW:'400',tSt:'normal',
-  playing:false,
-  // canvas render
-  rafId:null,
-  fxState:{}, // per-fx animation state
-  transAnim:null, // active transition animation
-};
-
-// ══════════════════════════════════════════════════════════
-//  CANVAS ENGINE  — renders srcVid frames with effects
-// ══════════════════════════════════════════════════════════
-const cvs = document.getElementById('cvs');
-const ctx = cvs.getContext('2d');
-const srcVid = document.getElementById('srcVid');
-
-function resizeCvs(){
-  const pw = document.getElementById('pw');
-  cvs.width = pw.offsetWidth;
-  cvs.height = pw.offsetHeight;
-}
-window.addEventListener('resize', resizeCvs);
-setTimeout(resizeCvs, 100);
-
-function renderFrame(){
-  S.rafId = requestAnimationFrame(renderFrame);
-  const W = cvs.width, H = cvs.height;
-  if(!W||!H) return;
-  ctx.clearRect(0,0,W,H);
-
-  const hasVid = srcVid.src && srcVid.readyState >= 2;
-  if(!hasVid){ ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H); return; }
-
-  // ── 1. Draw video frame ──────────────────────────────
-  ctx.save();
-
-  // Motion FX transforms
-  const fx = S.clipFx[S.activeIdx] || 'none';
-  const fs = S.fxState;
-
-  if(fx==='shake' && S.playing){
-    const t = Date.now()*0.08;
-    ctx.translate(Math.sin(t)*6, Math.cos(t*1.3)*4);
-  }
-
-  // Spin transition
-  if(fs.spinAngle !== undefined){
-    ctx.translate(W/2,H/2);
-    ctx.rotate(fs.spinAngle * Math.PI/180);
-    ctx.scale(fs.spinScale||1, fs.spinScale||1);
-    ctx.translate(-W/2,-H/2);
-  }
-  // Zoom punch
-  if(fs.zoomScale !== undefined && fs.zoomScale !== 1){
-    ctx.translate(W/2,H/2);
-    ctx.scale(fs.zoomScale,fs.zoomScale);
-    ctx.translate(-W/2,-H/2);
-  }
-  // Bounce
-  if(fs.bounceY){
-    ctx.translate(0, fs.bounceY);
-  }
-
-  ctx.drawImage(srcVid, 0, 0, W, H);
-  ctx.restore();
-
-  // ── 2. Color / filter effects ────────────────────────
-  applyColorFx(ctx, W, H, fx);
-
-  // ── 3. Vignette ──────────────────────────────────────
-  if(S.adj.vi > 0){
-    const rad = ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.8);
-    rad.addColorStop(0,'rgba(0,0,0,0)');
-    rad.addColorStop(1,`rgba(0,0,0,${S.adj.vi/100})`);
-    ctx.fillStyle=rad; ctx.fillRect(0,0,W,H);
-  }
-
-  // ── 4. Transition overlays ───────────────────────────
-  if(fs.flashAlpha > 0){
-    ctx.fillStyle=`rgba(255,255,255,${fs.flashAlpha})`;
-    ctx.fillRect(0,0,W,H);
-  }
-  if(fs.glitchOn){
-    for(let i=0;i<10;i++){
-      const gy=Math.random()*H, gh=Math.random()*16+2;
-      ctx.fillStyle=`rgba(${Math.random()<.5?'255,0,100':'0,200,255'},.3)`;
-      ctx.fillRect(0,gy,W,gh);
-    }
-    if(fx==='rgb' || S.clipFx[S.activeIdx]==='rgb'){
-      // RGB split
-      ctx.save();
-      ctx.globalCompositeOperation='screen';
-      ctx.globalAlpha=0.4;
-      ctx.drawImage(srcVid,-4,0,W,H);
-      ctx.globalAlpha=0.4;
-      ctx.drawImage(srcVid,4,0,W,H);
-      ctx.restore();
-    }
-  }
-  if(fs.fadeAlpha > 0){
-    ctx.fillStyle=`rgba(0,0,0,${fs.fadeAlpha})`;
-    ctx.fillRect(0,0,W,H);
-  }
-  if(fs.wipeX !== undefined){
-    ctx.fillStyle='#000';
-    ctx.fillRect(fs.wipeX,0,W,H);
-  }
-  if(fs.blurOverlay > 0){
-    // blur simulation: draw semi-transparent copies offset
-    ctx.save();
-    ctx.globalAlpha=fs.blurOverlay*0.5;
-    for(let d=1;d<=3;d++){
-      ctx.drawImage(srcVid,-d,-d,W+d*2,H+d*2);
-      ctx.drawImage(srcVid, d, d,W-d*2,H-d*2);
-    }
-    ctx.restore();
-  }
-  // Wipe reveal
-  if(fs.wipeRevealX !== undefined){
-    ctx.fillStyle='#000';
-    ctx.fillRect(fs.wipeRevealX,0,W-fs.wipeRevealX,H);
-  }
-
-  // ── 5. VHS scanlines ─────────────────────────────────
-  if(fx==='vhs'){
-    for(let y=0;y<H;y+=4){
-      ctx.fillStyle='rgba(0,0,0,0.08)'; ctx.fillRect(0,y,W,2);
-    }
-    ctx.fillStyle=`rgba(${Math.random()*20},0,${Math.random()*20+20},0.15)`;
-    ctx.fillRect(0,0,W,H);
-  }
-}
-
-function applyColorFx(ctx, W, H, clipFx){
-  const f = S.colorFilter.type;
-  const v = S.colorFilter.val/100;
-  const adj = S.adj;
-
-  // Build CSS-style filter string for the canvas filter property
-  let filters = [];
-
-  // Clip FX color
-  if(clipFx==='bw'||f==='grayscale') filters.push(`grayscale(${f==='grayscale'?S.colorFilter.val+'%':'100%'})`);
-  if(clipFx==='neon') filters.push('saturate(300%) hue-rotate(180deg) brightness(1.3)');
-  if(clipFx==='warm'||f==='sepia') filters.push(`sepia(${f==='sepia'?S.colorFilter.val+'%':'50%'}) saturate(130%)`);
-  if(clipFx==='cold') filters.push('hue-rotate(200deg) saturate(120%)');
-  if(clipFx==='golden') filters.push('sepia(60%) saturate(150%) brightness(1.15) hue-rotate(-10deg)');
-  if(clipFx==='cinema') filters.push('contrast(140%) saturate(120%) brightness(88%)');
-
-  // Panel filter
-  if(f==='saturate') filters.push(`saturate(${S.colorFilter.val}%)`);
-  if(f==='brightness') filters.push(`brightness(${S.colorFilter.val}%)`);
-
-  // Adjustments
-  filters.push(`brightness(${adj.br}%)`);
-  filters.push(`contrast(${adj.co}%)`);
-  filters.push(`saturate(${adj.sa}%)`);
-  filters.push(`hue-rotate(${adj.hu}deg)`);
-  if(adj.wa>0) filters.push(`sepia(${adj.wa}%)`);
-  if(adj.wa<0) filters.push(`hue-rotate(${adj.wa*2}deg)`);
-
-  // Apply using canvas filter (supported in modern browsers)
-  if(filters.length){
-    ctx.save();
-    ctx.filter = filters.join(' ');
-    ctx.drawImage(srcVid,0,0,W,H);
-    ctx.filter = 'none';
-    ctx.restore();
-  }
-}
-
-renderFrame(); // start loop
-
-// ══════════════════════════════════════════════════════════
-//  TRANSITION ENGINE
-// ══════════════════════════════════════════════════════════
-function playTransition(fxId, onMid){
-  const fs = S.fxState;
-  const W = cvs.width, H = cvs.height;
-
-  if(fxId==='flash'){
-    fs.flashAlpha=1;
-    onMid();
-    const step=()=>{ fs.flashAlpha=Math.max(0,fs.flashAlpha-0.09); if(fs.flashAlpha>0) requestAnimationFrame(step); else fs.flashAlpha=0; };
-    requestAnimationFrame(step);
-
-  } else if(fxId==='glitch'){
-    onMid();
-    fs.glitchOn=true;
-    let n=0;
-    const step=()=>{ n++; if(n<14) requestAnimationFrame(step); else fs.glitchOn=false; };
-    requestAnimationFrame(step);
-
-  } else if(fxId==='fade'){
-    fs.fadeAlpha=1;
-    const step=()=>{ fs.fadeAlpha=Math.max(0,fs.fadeAlpha-0.07); if(fs.fadeAlpha>0) requestAnimationFrame(step); else{ fs.fadeAlpha=0; onMid(); } };
-    requestAnimationFrame(step);
-
-  } else if(fxId==='zoom'){
-    onMid();
-    fs.zoomScale=1.15;
-    const step=()=>{ fs.zoomScale=Math.max(1,fs.zoomScale-0.015); if(fs.zoomScale>1) requestAnimationFrame(step); else fs.zoomScale=1; };
-    requestAnimationFrame(step);
-
-  } else if(fxId==='wipe'){
-    fs.wipeRevealX=W;
-    onMid();
-    const step=()=>{ fs.wipeRevealX=Math.max(0,fs.wipeRevealX-W*0.12); if(fs.wipeRevealX>0) requestAnimationFrame(step); else delete fs.wipeRevealX; };
-    requestAnimationFrame(step);
-
-  } else if(fxId==='blur'){
-    fs.blurOverlay=1;
-    const step=()=>{ fs.blurOverlay=Math.max(0,fs.blurOverlay-0.1); if(fs.blurOverlay>0) requestAnimationFrame(step); else{ fs.blurOverlay=0; onMid(); } };
-    requestAnimationFrame(step);
-
-  } else if(fxId==='spin'){
-    fs.spinAngle=0; fs.spinScale=1;
-    let going=true;
-    const step=()=>{
-      fs.spinAngle+=18; fs.spinScale=Math.max(0.3,fs.spinScale-0.07);
-      if(fs.spinAngle<180) requestAnimationFrame(step);
-      else{
-        onMid();
-        fs.spinAngle=180; fs.spinScale=0.3;
-        const back=()=>{ fs.spinAngle+=18; fs.spinScale=Math.min(1,fs.spinScale+0.07); if(fs.spinAngle<360) requestAnimationFrame(back); else{ delete fs.spinAngle; delete fs.spinScale; } };
-        requestAnimationFrame(back);
-      }
-    };
-    requestAnimationFrame(step);
-
-  } else if(fxId==='bounce'){
-    onMid();
-    fs.bounceY=-18;
-    const step=()=>{
-      fs.bounceY=fs.bounceY<0 ? Math.min(0,fs.bounceY+3) : Math.max(0,fs.bounceY-2);
-      if(fs.bounceY!==0) requestAnimationFrame(step); else delete fs.bounceY;
-    };
-    requestAnimationFrame(step);
-
-  } else {
-    onMid();
-  }
-}
-
-// Persistent motion FX (shake, rgb) run in renderFrame loop — no transition needed
-
-// ══════════════════════════════════════════════════════════
-//  BUILD UI
-// ══════════════════════════════════════════════════════════
-
-// FILTER DEFINITIONS
-const FILTS = [
-  {id:'none',    l:'Original', bg:'#1a1a2e',e:'📷'},
-  {id:'grayscale',l:'P&B',    bg:'linear-gradient(#555,#999)',e:'⬜'},
-  {id:'sepia',   l:'Sépia',   bg:'linear-gradient(#7a5c3a,#c8954a)',e:'🎞'},
-  {id:'saturate',l:'Vibrante',bg:'linear-gradient(#f72,#fc0)',e:'🌈',val:180},
-  {id:'brightness',l:'Claro', bg:'#ccc',e:'☀',val:130},
-  {id:'saturate',l:'Escuro',  bg:'#111',e:'🌙',val:100,extra:'brightness(70%) contrast(130%)'},
-  {id:'saturate',l:'Rosa',    bg:'linear-gradient(#f9a,#fad0c4)',e:'🌸',val:150,hue:-20},
-  {id:'saturate',l:'Roxo',    bg:'linear-gradient(#a18cd1,#fbc2eb)',e:'💜',val:150,hue:180},
-  {id:'saturate',l:'Verde',   bg:'linear-gradient(#11998e,#38ef7d)',e:'🌿',val:120,hue:140},
-  {id:'saturate',l:'Cinema',  bg:'linear-gradient(#2d3561,#a8edea)',e:'🎯',val:120,extra:'contrast(140%) brightness(90%)'},
-];
-(function buildFiltGrid(){
-  const g=document.getElementById('filtGrid');
-  FILTS.forEach((f,i)=>{
-    const b=document.createElement('div'); b.className='fb'+(i===0?' on':'');
-    b.innerHTML=`<div class="ft" style="background:${f.bg}">${f.e}</div>${f.l}`;
-    b.onclick=()=>{
-      document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on')); b.classList.add('on');
-      S.colorFilter={type:f.id,val:f.val||100,extra:f.extra||'',hue:f.hue||0};
-    };
-    g.appendChild(b);
-  });
-})();
-
-// FX SHELF
-(function buildFxShelf(){
-  const row=document.getElementById('fxRow');
-  FX_LIST.forEach(fx=>{
-    const c=document.createElement('div'); c.className='fx-chip'+(fx.id==='none'?' on':'');
-    c.innerHTML=`<span class="e">${fx.e}</span><span class="n">${fx.n}</span><span class="c">${fx.cat}</span>`;
-    c.onclick=()=>{
-      document.querySelectorAll('.fx-chip').forEach(x=>x.classList.remove('on')); c.classList.add('on');
-      applyFxToActive(fx.id);
-    };
-    row.appendChild(c);
-  });
-})();
-
-function applyFxToActive(fxId){
-  if(S.activeIdx<0) return;
-  S.clipFx[S.activeIdx]=fxId;
-  renderTimeline();
-  notify(`${FX_LIST.find(f=>f.id===fxId)?.e||'✦'} Efeito "${FX_LIST.find(f=>f.id===fxId)?.n}" aplicado!`);
-}
-
-// GALLERY
-let galCat='Todos';
-function buildGallery(){
-  const catsEl=document.getElementById('galCats');
-  catsEl.innerHTML='';
-  CATS.forEach(c=>{
-    const b=document.createElement('div'); b.className='cat'+(c===galCat?' on':'');
-    b.textContent=c; b.onclick=()=>{galCat=c;buildGallery();};
-    catsEl.appendChild(b);
-  });
-  const grid=document.getElementById('galGrid');
-  grid.innerHTML='';
-  const list=galCat==='Todos'?TMPLS:TMPLS.filter(t=>t.cat===galCat);
-  list.forEach(t=>{
-    const c=document.createElement('div'); c.className='card';
-    c.innerHTML=`
-      <div class="card-thumb" style="background:${t.color}">
-        <div style="font-size:38px">${t.emoji}</div>
-        <div style="font-size:10px;color:${t.acc};font-weight:800">${t.name}</div>
-        <div style="font-size:9px;color:rgba(255,255,255,.3)">${t.slots} slots</div>
-        <div class="use-btn">▶ Usar Template</div>
-      </div>
-      <div class="card-info">
-        <div class="card-name">${t.name}</div>
-        <div class="card-desc">${t.desc}</div>
-        <div class="card-tags">
-          <span class="tag tp">📼 ${t.tags[0]}</span>
-          <span class="tag tg">⏱ ${t.tags[1]}</span>
-          <span class="tag ty">⚡ ${t.tags[2]}</span>
-        </div>
-      </div>`;
-    c.onclick=()=>useTemplate(t.id);
-    grid.appendChild(c);
-  });
-}
-
-// ══════════════════════════════════════════════════════════
-//  TEMPLATE SYSTEM
-// ══════════════════════════════════════════════════════════
-function useTemplate(id){
-  const t=TMPLS.find(x=>x.id===id); if(!t) return;
-  S.activeTmpl=t;
-  S.slots=t.slotLabels.map((l,i)=>({filled:false,url:null,name:null,label:l}));
-  S.vClips=[]; S.mClips=[]; S.tClips=[]; S.activeIdx=-1;
-  S.clipFx={};
-  S.colorFilter={type:t.filter,val:t.filterVal};
-  document.getElementById('txtLayer').innerHTML='';
-  document.getElementById('noVid').style.display='flex';
-
-  // Switch view
-  document.querySelectorAll('.tab').forEach((tb,i)=>tb.classList.toggle('on',i===1));
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
-  document.getElementById('vEd').classList.add('on');
-
-  const tag=document.getElementById('tmplTag');
-  tag.style.display=''; tag.textContent=t.emoji+' '+t.name;
-
-  document.getElementById('slotBar').classList.remove('hide');
-  renderSlots(); renderTimeline();
-  resizeCvs();
-  notify(`${t.emoji} Template "${t.name}" carregado! Importe ${t.slots} vídeo(s).`);
-}
-
-function renderSlots(){
-  const el=document.getElementById('slotList'); el.innerHTML='';
-  S.slots.forEach((s,i)=>{
-    const d=document.createElement('div'); d.className='slot'+(s.filled?' ok':'');
-    d.innerHTML=`${s.filled?'✅':'📼'} <b>${s.filled?s.name.substring(0,12)+'…':s.label}</b>`;
-    d.onclick=()=>{
-      const inp=document.createElement('input');inp.type='file';inp.accept='video/*';
-      inp.onchange=e=>{if(e.target.files[0])fillSlot(i,e.target.files[0]);};inp.click();
-    };
-    el.appendChild(d);
-  });
-}
-
-function fillSlot(si,file){
-  const url=URL.createObjectURL(file);
-  const name=file.name.replace(/\.[^.]+$/,'');
-  S.slots[si]={filled:true,url,name,label:S.activeTmpl.slotLabels[si]};
-  if(!S.media.find(m=>m.url===url)) S.media.push({name,url,type:'video',file});
-  S.vClips=S.slots.filter(s=>s.filled).map(s=>({name:s.name,url:s.url}));
-  // Assign template fx to each clip slot
-  S.slots.forEach((s,i)=>{
-    if(s.filled && !S.clipFx[i]) S.clipFx[i]=S.activeTmpl.fxSeq[i%S.activeTmpl.fxSeq.length];
-  });
-  renderMedia(); renderSlots(); renderTimeline();
-  if(S.vClips.length===1){loadClip(0);applyTmplTexts();}
-  const left=S.slots.filter(s=>!s.filled).length;
-  notify(left===0?'✦ Todos os slots preenchidos! Pressione ▶':`✅ Slot preenchido! Faltam ${left}.`);
-}
-
-function autoFill(){
-  if(!S.media.length){notify('⚠ Adicione vídeos primeiro!');return;}
-  let mi=0;
-  S.slots.forEach((s,i)=>{if(!s.filled&&mi<S.media.length){const m=S.media[mi++];S.slots[i]={filled:true,url:m.url,name:m.name,label:s.label};}});
-  S.vClips=S.slots.filter(s=>s.filled).map(s=>({name:s.name,url:s.url}));
-  S.slots.forEach((s,i)=>{if(s.filled&&!S.clipFx[i])S.clipFx[i]=S.activeTmpl.fxSeq[i%S.activeTmpl.fxSeq.length];});
-  renderMedia();renderSlots();renderTimeline();
-  if(S.vClips.length>0){loadClip(0);applyTmplTexts();}
-  notify('✦ Slots preenchidos!');
-}
-
-function applyTmplTexts(){
-  const t=S.activeTmpl; if(!t) return;
-  const lyr=document.getElementById('txtLayer'); lyr.innerHTML=''; lyr.style.pointerEvents='auto';
-  S.tClips=[];
-  t.texts.forEach(tx=>{
-    const el=document.createElement('div'); el.className='txt-el';
-    el.textContent=tx.t;
-    el.style.cssText=`color:${tx.c};font-size:${tx.sz}px;font-weight:${tx.w};font-family:'DM Sans',sans-serif;text-shadow:${tx.sh};position:absolute;left:${tx.x}%;top:${tx.y}%;transform:translate(-50%,-50%)`;
-    makeDraggable(el); el.addEventListener('dblclick',()=>el.remove());
-    lyr.appendChild(el);
-    S.tClips.push({label:tx.t.substring(0,14)});
-  });
-  renderTimeline();
-}
-
-// ══════════════════════════════════════════════════════════
-//  FILE HANDLING
-// ══════════════════════════════════════════════════════════
-function dzOn(e){e.preventDefault();document.getElementById('dz').classList.add('ov');}
-function dzOff(){document.getElementById('dz').classList.remove('ov');}
-function dzDrop(e){e.preventDefault();dzOff();handleFiles(e.dataTransfer.files);}
-
-function handleFiles(files){
-  Array.from(files).forEach(file=>{
-    const url=URL.createObjectURL(file);
-    const isV=file.type.startsWith('video/'), isA=file.type.startsWith('audio/');
-    if(!isV&&!isA) return;
-    const name=file.name.replace(/\.[^.]+$/,'');
-    const item={name,url,type:isV?'video':'audio',file};
-    if(!S.media.find(m=>m.url===url)) S.media.push(item);
-    renderMedia();
-    if(isA){S.mClips.push(item);renderTimeline();document.getElementById('bgAud').src=url;document.getElementById('bgAud').play().catch(()=>{});notify('🎵 Música adicionada!');return;}
-    if(S.activeTmpl){
-      const ei=S.slots.findIndex(s=>!s.filled);
-      if(ei>=0){fillSlot(ei,file);return;}
-    }
-    S.vClips.push(item);renderTimeline();
-    if(S.vClips.length===1) loadClip(0);
-  });
-}
-
-function renderMedia(){
-  const el=document.getElementById('mlist'); el.innerHTML='';
-  S.media.forEach(m=>{
-    const used=S.slots.some(s=>s.url===m.url);
-    const d=document.createElement('div'); d.className='mi'+(used?' used':'');
-    d.innerHTML=`<div class="mi-thumb">${m.type==='video'?'🎬':'🎵'}</div><div class="mi-name">${m.name.substring(0,20)}</div>`;
-    d.onclick=()=>{const ci=S.vClips.findIndex(c=>c.url===m.url);if(ci>=0)loadClip(ci);};
-    el.appendChild(d);
-  });
-}
-
-// ══════════════════════════════════════════════════════════
-//  TIMELINE
-// ══════════════════════════════════════════════════════════
-function renderTimeline(){
-  const vt=document.getElementById('vTrk'); vt.innerHTML='';
-  if(S.activeTmpl){
-    S.slots.forEach((s,i)=>{
-      const d=document.createElement('div');
-      d.className='clip vc slot-c'+(s.filled?' ok':'')+(i===S.activeIdx?' on':'');
-      d.style.width='82px';
-      const fxId=S.clipFx[i];
-      const fxEmoji=fxId?FX_LIST.find(f=>f.id===fxId)?.e||'':'';
-      d.innerHTML=(s.filled?`${fxEmoji} ${s.name.substring(0,8)}`:`Slot ${i+1}`)+`<button class="cdel" onclick="event.stopPropagation();clearSlot(${i})">✕</button>`;
-      d.onclick=()=>{if(s.filled){const ci=S.vClips.findIndex(c=>c.url===s.url);if(ci>=0)loadClip(ci);}else{const inp=document.createElement('input');inp.type='file';inp.accept='video/*';inp.onchange=e=>{if(e.target.files[0])fillSlot(i,e.target.files[0])};inp.click();}};
-      vt.appendChild(d);
-    });
-  } else {
-    S.vClips.forEach((c,i)=>{
-      const d=document.createElement('div'); d.className='clip vc'+(i===S.activeIdx?' on':'');
-      d.style.width=Math.max(68,c.name.length*5.5+28)+'px';
-      const fxId=S.clipFx[i]; const fxEmoji=fxId?FX_LIST.find(f=>f.id===fxId)?.e||'':'';
-      d.innerHTML=`${fxEmoji} ${c.name.substring(0,10)}<button class="cdel" onclick="event.stopPropagation();remClip('v',${i})">✕</button>`;
-      d.onclick=()=>loadClip(i);
-      vt.appendChild(d);
-    });
-  }
-  const mt=document.getElementById('mTrk'); mt.innerHTML='';
-  S.mClips.forEach((c,i)=>{const d=document.createElement('div');d.className='clip mc';d.style.width='86px';d.innerHTML=`🎵 ${c.name.substring(0,8)}<button class="cdel" onclick="remClip('m',${i})">✕</button>`;mt.appendChild(d);});
-  const tt=document.getElementById('tTrk'); tt.innerHTML='';
-  S.tClips.forEach((c,i)=>{const d=document.createElement('div');d.className='clip tc';d.style.width=Math.max(68,c.label.length*6+20)+'px';d.innerHTML=`${c.label}<button class="cdel" onclick="remClip('t',${i})">✕</button>`;tt.appendChild(d);});
-}
-
-function clearSlot(i){
-  S.slots[i]={filled:false,url:null,name:null,label:S.activeTmpl.slotLabels[i]};
-  delete S.clipFx[i];
-  S.vClips=S.slots.filter(s=>s.filled).map(s=>({name:s.name,url:s.url}));
-  renderSlots();renderTimeline();
-}
-function remClip(t,i){
-  if(t==='v'){S.vClips.splice(i,1);delete S.clipFx[i];S.activeIdx=Math.min(S.activeIdx,S.vClips.length-1);if(S.vClips.length>0)loadClip(S.activeIdx);else{srcVid.src='';document.getElementById('noVid').style.display='flex';}}
-  else if(t==='m'){S.mClips.splice(i,1);document.getElementById('bgAud').pause();document.getElementById('bgAud').src='';}
-  else S.tClips.splice(i,1);
-  renderTimeline();
-}
-
-// ══════════════════════════════════════════════════════════
-//  PLAYER
-// ══════════════════════════════════════════════════════════
-function loadClip(idx){
-  if(idx<0||idx>=S.vClips.length)return;
-  S.activeIdx=idx;
-  srcVid.src=S.vClips[idx].url;
-  srcVid.load();
-  document.getElementById('noVid').style.display='none';
-  renderTimeline();
-  // Update FX chip selection
-  const fxId=S.clipFx[idx]||'none';
-  document.querySelectorAll('.fx-chip').forEach((c,i)=>{c.classList.toggle('on',FX_LIST[i]?.id===fxId);});
-}
-
-function togglePlay(){
-  if(!srcVid.src) return;
-  const bgAud=document.getElementById('bgAud');
-  if(srcVid.paused){srcVid.play().catch(()=>{});bgAud.play().catch(()=>{});document.getElementById('pbBtn').textContent='⏸';S.playing=true;}
-  else{srcVid.pause();bgAud.pause();document.getElementById('pbBtn').textContent='▶';S.playing=false;}
-}
-
-srcVid.addEventListener('ended',()=>{
-  const next=S.activeIdx+1;
-  if(next<S.vClips.length){
-    const fx=S.clipFx[next]||'fade';
-    playTransition(fx,()=>{loadClip(next);if(S.playing)srcVid.play().catch(()=>{});});
-  } else {document.getElementById('pbBtn').textContent='▶';S.playing=false;}
-});
-
-srcVid.addEventListener('timeupdate',()=>{
-  const d=srcVid.duration||0,c=srcVid.currentTime||0,p=d?c/d*100:0;
-  document.getElementById('pbarF').style.width=p+'%';
-  document.getElementById('pbarH').style.left=p+'%';
-  const fmt=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
-  document.getElementById('pbTime').textContent=`${fmt(c)} / ${fmt(d)}`;
-});
-
-function seek(e){
-  if(!srcVid.duration)return;
-  const r=document.getElementById('pbar').getBoundingClientRect();
-  srcVid.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*srcVid.duration;
-}
-function setVol(v){srcVid.volume=parseFloat(v);document.getElementById('bgAud').volume=parseFloat(v)*.5;}
-function pickAudio(){const i=document.createElement('input');i.type='file';i.accept='audio/*';i.onchange=e=>handleFiles(e.target.files);i.click();}
-
-// ══════════════════════════════════════════════════════════
-//  ADJUSTMENTS
-// ══════════════════════════════════════════════════════════
-function adjUpd(){
-  const map={Br:'br',Co:'co',Sa:'sa',Hu:'hu',Wa:'wa',Vi:'vi'};
-  Object.entries(map).forEach(([k,sk])=>{S.adj[sk]=+document.getElementById('a'+k).value;document.getElementById('v'+k).textContent=S.adj[sk];});
-}
-function resetAdj(){
-  const d={Br:100,Co:100,Sa:100,Hu:0,Wa:0,Vi:0};
-  Object.entries(d).forEach(([k,v])=>{document.getElementById('a'+k).value=v;document.getElementById('v'+k).textContent=v;});
-  S.adj={br:100,co:100,sa:100,hu:0,wa:0,vi:0};
-  notify('↺ Ajustes resetados');
-}
-
-// ══════════════════════════════════════════════════════════
-//  TEXT
-// ══════════════════════════════════════════════════════════
-function pickCol(el,c){document.querySelectorAll('.cd').forEach(d=>d.classList.remove('on'));el.classList.add('on');S.tCol=c;}
-function pickSz(el,sz){el.closest('.sr').querySelectorAll('.sb').forEach(b=>b.classList.remove('on'));el.classList.add('on');S.tSz=sz;}
-function pickSt(el,w,st){['stN','stB','stI'].forEach(id=>document.getElementById(id).classList.remove('on'));el.classList.add('on');S.tW=w;S.tSt=st;}
-
-function addText(){
-  const txt=document.getElementById('tInp').value.trim(); if(!txt) return;
-  const lyr=document.getElementById('txtLayer'); lyr.style.pointerEvents='auto';
-  const el=document.createElement('div'); el.className='txt-el';
-  el.textContent=txt;
-  el.style.cssText=`color:${S.tCol};font-size:${S.tSz};font-weight:${S.tW};font-style:${S.tSt};font-family:'DM Sans',sans-serif;text-shadow:0 2px 8px rgba(0,0,0,.9);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)`;
-  makeDraggable(el); el.addEventListener('dblclick',()=>el.remove());
-  lyr.appendChild(el);
-  S.tClips.push({label:txt.substring(0,14)}); renderTimeline();
-  notify('✍ Texto adicionado!');
-}
-
-function makeDraggable(el){
-  el.addEventListener('mousedown',e=>{
-    e.preventDefault();
-    const wr=document.getElementById('pw').getBoundingClientRect();
-    const r=el.getBoundingClientRect();
-    const ox=e.clientX-r.left,oy=e.clientY-r.top;
-    el.style.transform='none';
-    const mv=me=>{el.style.left=(me.clientX-wr.left-ox)+'px';el.style.top=(me.clientY-wr.top-oy)+'px';};
-    const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};
-    document.addEventListener('mousemove',mv); document.addEventListener('mouseup',up);
-  });
-}
-
-// ══════════════════════════════════════════════════════════
-//  MISC
-// ══════════════════════════════════════════════════════════
-function goView(id,btn){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  btn.classList.add('on');
-  if(id==='vEd') resizeCvs();
-}
-function rTab(el,id){
-  document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.rp').forEach(p=>p.classList.remove('on'));
-  el.classList.add('on'); document.getElementById(id).classList.add('on');
-}
-function notify(msg){
-  const el=document.getElementById('notif');el.textContent=msg;el.classList.add('on');
-  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),3200);
-}
-function doExport(){
-  if(!S.vClips.length){notify('⚠ Adicione vídeos primeiro!');return;}
-  const idx=Math.max(0,S.activeIdx);
-  const a=document.createElement('a');a.href=S.vClips[idx].url;
-  a.download='lojaedit_'+Date.now()+'.mp4';a.click();
-  notify('⬇ Download iniciado! (vídeo original — efeitos são em tempo real)');
-}
-
-// INIT
-buildGallery();
-</script>
 </body>
 </html>
